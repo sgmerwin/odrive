@@ -1,0 +1,83 @@
+basic configuration for:
+CUI AMT102 with all dip pins in 0 position 4x PPR 4*2048 = 8192
+D5065-270kv motor = 7 pole pairs
+By the forum: the default encoder calibration range is .01
+Mine is at the default and working. 
+If the cpr error persists, bump it to 0.1
+
+Initially my mac did not find the odrive. 
+I turned on and off the power to the odrive several times and during one of these
+cycles my mac reconized the odrive. 
+
+odrivetool
+
+odrv0.axis0.motor.config.motor_type = MOTOR_TYPE_HIGH_CURRENT
+odrv0.axis0.encoder.config.cpr = 8192
+odrv0.axis0.motor.config.pole_pairs = 7 
+odrv0.axis0.encoder.config.calib_range = 0.1
+odrv0.axis0.requested_state = AXIS_STATE_FULL_CALIBRATION_SEQUENCE
+
+dump_errors(odrv0)
+if things are not working this will tell you why
+
+odrv0.reboot()
+I kept getting a cpr out of range error
+I rebooted and re-entered all configurations and no more error
+
+odrv0.save_configuration()
+Save if everything is working
+
+odrv0.axis0.requested_state = AXIS_STATE_CLOSED_LOOP_CONTROL
+odrv0.axis0.controller.pos_setpoint = 10000
+
+odrv0.axis0.requested_state = AXIS_STATE_MOTOR_CALIBRATION
+odrv0.axis0.motor.config.pre_calibrated = True
+odrv0.save_configuration()
+
+odrv0.axis0.requested_state = AXIS_STATE_ENCODER_INDEX_SEARCH
+odrv0.axis0.requested_state = AXIS_STATE_ENCODER_OFFSET_CALIBRATION
+
+odrv0.axis0.encoder
+In [90]: odrv0.axis0.encoder
+Out[90]: 
+vel_estimate = 0.0 (float)
+hall_state = 0 (int)
+pos_cpr = 7760.75 (float)
+phase = -0.8091802597045898 (float)
+calib_scan_response = 9308.0 (float)
+count_in_cpr = 7760 (int)
+is_ready = True (bool)
+index_found = True (bool)
+interpolation = 0.5 (float)
+error = 0x0000 (int)
+set_linear_count(count: int)
+config:
+  idx_search_unidirectional = False (bool)
+  offset_float = 0.07449999451637268 (float)
+  cpr = 8192 (int)
+  offset = -4962 (int)
+  calib_range = 0.019999999552965164 (float)
+  bandwidth = 1000.0 (float)
+  ignore_illegal_hall_state = False (bool)
+  use_index = True (bool)
+  calib_scan_omega = 12.566370964050293 (float)
+  calib_scan_distance = 50.26548385620117 (float)
+  pre_calibrated = False (bool)
+  enable_phase_interpolation = True (bool)
+  mode = 0 (int)
+  find_idx_on_lockin_only = False (bool)
+  zero_count_on_find_idx = True (bool)
+shadow_count = -432 (int)
+pos_estimate = -431.25 (float)
+
+pre_calibrated was set to True and it is False
+
+In [91]: odrv0.axis0.encoder.pos_estimate
+Out[91]: -714.765625
+
+I moved the motor by hand several times pos_estimate is updating.
+
+odrv0.axis0.encoder.vel_estimate
+
+
+
