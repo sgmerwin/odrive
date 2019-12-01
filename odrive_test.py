@@ -31,12 +31,14 @@ def move(x):
 
 def odQuit():
     global odrv0
-    odrive.quit()         
+    odrv0.dump_errors(odrv0)
+    odrv0.quit() 
 
+                
 def main():
     start()
     close()
-    for i in range(10):
+    for i in range(5):
         move(1000)
         time.sleep(3.0)
         move(-1000)
