@@ -79,5 +79,11 @@ I moved the motor by hand several times pos_estimate is updating.
 
 odrv0.axis0.encoder.vel_estimate
 
+odrv0.axis0.requested_state = AXIS_STATE_IDLE
+This free spins the motor
+The motor will not take a position setpoint in this state
 
+odrv0.axis0.requested_state = AXIS_STATE_CLOSED_LOOP_CONTROL
+now the motor will take a position setpoint
 
+odrv0.axis0.controller.pos_setpoint = 10000
